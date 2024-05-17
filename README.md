@@ -80,5 +80,5 @@ In my installation at home, I am using the following Hardware:
 - Fronius Smart Meter 63A-3 - (three phases)
 - Victron MultiPlus-II - Battery Inverter (single phase)
 - Raspberry Pi 3B+ - For running Venus OS
-- Pylontech US2000 Plus - LiFePO Battery
+- Pylontech US2000 Plus - LiFePO Batter
 
