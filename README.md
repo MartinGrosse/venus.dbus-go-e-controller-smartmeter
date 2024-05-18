@@ -41,7 +41,7 @@ The Python script cyclically reads data from the go-e controller SmartMeter via 
   
    `rc.local`
 
-   The daemon-tools should automatically start this service within seconds.
+   The daemon-tools  automatically start this service within seconds.
 
 ### Debugging
 
@@ -67,8 +67,9 @@ If the script stops with the message
 
 it means that the service is still running or another service is using that bus name.
 
-If the script seems running start `dbus-spy`, you should see 
-`com.victronenergy.grid.mymeter                                                                      go-e controller Smart Meter`
+If the script seems running start `dbus-spy`, you should see:
+
+`com.victronenergy.grid.mymeter                         go-e controller Smart Meter`
 
 Use arrow key to go down and hit Enter.
 
