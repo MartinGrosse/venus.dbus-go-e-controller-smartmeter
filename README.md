@@ -8,9 +8,10 @@ The Python script cyclically reads data from the go-e controller SmartMeter via 
 
 ### Configuration
 
-1. In the Python file, you should put the IP of your go-e controller device that hosts the REST API.
-2. Used API keys for each phase are: coltage -> "usv", current(i) and power(p) -> "isv" 
-3. In my go-e configuration home and grid is the same and the API key "cec" is used, for cunsumtion values AC power "ccp"
+1. Activate the local HTTP v2 API on your go-e controller
+2. In the Python file, you should put the IP of your go-e controller device that hosts the HTTP API.
+3. Used API keys for each phase are: voltage -> "usv", current(i) and power(p) -> "isv" 
+4. In my go-e configuration home and grid is the same and the API key "cec" is used, for cunsumtion values AC power "ccp"
 
 ### Installation
 
