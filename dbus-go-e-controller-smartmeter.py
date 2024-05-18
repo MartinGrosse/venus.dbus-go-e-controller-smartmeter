@@ -54,16 +54,17 @@ class DbusDummyService:
       self._dbusservice.add_path(
         path, settings['initial'], writeable=True, onchangecallback=self._handlechangedvalue)
 
-    gobject.timeout_add(500, self._update) # pause 500ms before the next request
+    gobject.timeout_add(1000, self._update) # pause 1000ms before the next request
 
   def _update(self):
     try:
-      meter_url = "http://192.168.178.47/api/status?filter=isv,ccp,usv"
+      meter_url = "http://192.168.178.47/api/status?filter=isv,ccp,usv,cec,fwv"
 
       
       meter_r = requests.get(url=meter_url) # request data from the Fronius PV inverter
       meter_data = meter_r.json() # convert JSON data
-#      meter_consumption = meter_data['ccp']
+#        fwv = (meter_data['fwv'])
+#      self._dbusservice.add_path('/FirmwareVersion', fwv )
 #      meter_model = meter_data['host']
 #      if meter_model == 'Smart Meter 63A-1':  # set values for single phase meter
 #        meter_data['Body']['Data']['Voltage_AC_Phase_2'] = 0
@@ -73,7 +74,7 @@ class DbusDummyService:
 #        meter_data['Body']['Data']['PowerReal_P_Phase_2'] = 0
 #        meter_data['Body']['Data']['PowerReal_P_Phase_3'] = 0
       self._dbusservice['/Ac/Power'] = round((meter_data['ccp'][0]),2) # positive: consumption, negative: feed into grid
-      self._dbusservice["/Ac/L1/Voltage"] = round((meter_data["usv"][0]["u1"]),2)
+      self._dbusservice["/Ac/L1/Voltage"] = round((meter_data['usv'][0]['u1']),2)
       self._dbusservice['/Ac/L2/Voltage'] = round((meter_data['usv'][0]['u2']),2)
       self._dbusservice['/Ac/L3/Voltage'] = round((meter_data['usv'][0]['u3']),2)
       self._dbusservice['/Ac/L1/Current'] = round((meter_data['isv'][0]['i']),2)
@@ -82,8 +83,8 @@ class DbusDummyService:
       self._dbusservice['/Ac/L1/Power'] = round((meter_data['isv'][0]['p']),2)
       self._dbusservice['/Ac/L2/Power'] = round((meter_data['isv'][1]['p']),2)
       self._dbusservice['/Ac/L3/Power'] = round((meter_data['isv'][2]['p']),2)
-#      self._dbusservice['/Ac/Energy/Forward'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Sum_Consumed'])/1000
-#      self._dbusservice['/Ac/Energy/Reverse'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Sum_Produced'])/1000
+      self._dbusservice['/Ac/Energy/Forward'] = round(((meter_data['cec'][0][0])/1000),4)
+      self._dbusservice['/Ac/Energy/Reverse'] = round(((meter_data['cec'][0][1])/1000),4)
 #      logging.info("House Consumption: {:.0f}".format(meter_consumption))
     except:
       logging.info("WARNING: Could not read from Fronius PV inverter")
@@ -111,18 +112,18 @@ def main():
     servicename='com.victronenergy.grid.mymeter',
     deviceinstance=0,
     paths={
-      '/Ac/Power': {'initial': 0},
-      '/Ac/L1/Voltage': {'initial': 0},
-      '/Ac/L2/Voltage': {'initial': 0},
-      '/Ac/L3/Voltage': {'initial': 0},
-      '/Ac/L1/Current': {'initial': 0},
-      '/Ac/L2/Current': {'initial': 0},
-      '/Ac/L3/Current': {'initial': 0},
-      '/Ac/L1/Power': {'initial': 0},
-      '/Ac/L2/Power': {'initial': 0},
-      '/Ac/L3/Power': {'initial': 0},
-      '/Ac/Energy/Forward': {'initial': 0}, # energy bought from the grid
-      '/Ac/Energy/Reverse': {'initial': 0}, # energy sold to the grid
+      '/Ac/Power': {'initial': None},
+      '/Ac/L1/Voltage': {'initial': None},
+      '/Ac/L2/Voltage': {'initial': None},
+      '/Ac/L3/Voltage': {'initial': None},
+      '/Ac/L1/Current': {'initial': None},
+      '/Ac/L2/Current': {'initial': None},
+      '/Ac/L3/Current': {'initial': None},
+      '/Ac/L1/Power': {'initial': None},
+      '/Ac/L2/Power': {'initial': None},
+      '/Ac/L3/Power': {'initial': None},
+      '/Ac/Energy/Forward': {'initial': None}, # energy bought from the grid
+      '/Ac/Energy/Reverse': {'initial': None}, # energy sold to the grid
       path_UpdateIndex: {'initial': 0},
     })
 
